@@ -1,0 +1,21 @@
+% Create a cascade detector object.
+faceDetector = vision.CascadeObjectDetector();
+
+% Read a video frame and run the face detector.
+videoFileReader = vision.VideoFileReader('manish.avi');
+videoFrame      = step(videoFileReader);
+bbox            = step(faceDetector, videoFrame);
+
+% Draw the returned bounding box around the detected face.
+videoFrame = insertShape(videoFrame, 'Rectangle', bbox);
+figure; imshow(videoFrame); title('Detected face');
+
+% Convert the first box into a list of 4 points
+% This is needed to be able to visualize the rotation of the object.
+
+% Detect feature points in the face region.
+points = detectMinEigenFeatures(rgb2gray(videoFrame), 'ROI', bbox);
+
+% Display the detected points.
+figure, imshow(videoFrame), hold on, title('Detected features');
+plot(points);
